@@ -43,4 +43,8 @@ public class Subscription {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Enumerated(EnumType.STRING)   // хранит "MONTHLY", а не 0/1 — не сломается при добавлении новых значений
+    @Column(nullable = false)
+    private BillingCycle billingCycle = BillingCycle.MONTHLY;  // дефолт для старых записей
 }
