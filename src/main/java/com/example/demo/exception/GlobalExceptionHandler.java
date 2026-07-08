@@ -1,4 +1,3 @@
-
 package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
@@ -20,5 +19,13 @@ public class GlobalExceptionHandler {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         return errors;
+    }
+
+    @ExceptionHandler(SubscriptionNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFound(SubscriptionNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return error;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.SubscriptionNotFoundException;
 import com.example.demo.model.Subscription;
 import com.example.demo.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,21 @@ public class SubscriptionService {
         return repository.save(subscription);
     }
 
+    public Subscription update(Long id, Subscription updated) {
+        Subscription existing = repository.findById(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        existing.setName(updated.getName());
+        existing.setPrice(updated.getPrice());
+        existing.setBillingDate(updated.getBillingDate());
+        existing.setCategory(updated.getCategory());
+        existing.setBillingCycle(updated.getBillingCycle());
+        return repository.save(existing);
+    }
+
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new SubscriptionNotFoundException(id);
+        }
         repository.deleteById(id);
     }
 

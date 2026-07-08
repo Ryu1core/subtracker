@@ -42,6 +42,18 @@ public class SubscriptionController {
         return SubscriptionResponse.from(service.save(sub));
     }
 
+    @PutMapping("/{id}")
+    public SubscriptionResponse update(@PathVariable Long id,
+                                       @Valid @RequestBody SubscriptionRequest request) {
+        Subscription sub = new Subscription();
+        sub.setName(request.getName());
+        sub.setPrice(request.getPrice());
+        sub.setBillingDate(request.getBillingDate());
+        sub.setCategory(request.getCategory());
+        sub.setBillingCycle(request.getBillingCycle());
+        return SubscriptionResponse.from(service.update(id, sub));
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
