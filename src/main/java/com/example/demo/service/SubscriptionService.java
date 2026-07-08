@@ -14,18 +14,15 @@ public class SubscriptionService {
     @Autowired
     private SubscriptionRepository repository;
 
-    // Получить все подписки
-    public List<Subscription> getAllSubscriptions() {
+    public List<Subscription> getAll() {
         return repository.findAll();
     }
 
-    // Добавить новую подписку
-    public Subscription addSubscription(Subscription subscription) {
+    public Subscription save(Subscription subscription) {
         return repository.save(subscription);
     }
 
-    // Удалить подписку по id
-    public void deleteSubscription(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 

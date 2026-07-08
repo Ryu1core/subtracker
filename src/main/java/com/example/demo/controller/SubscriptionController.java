@@ -1,40 +1,53 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.SubscriptionRequest;
+import com.example.demo.dto.SubscriptionResponse;
 import com.example.demo.model.Subscription;
 import com.example.demo.service.SubscriptionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/subscriptions")
-@CrossOrigin(origins = "*")
 public class SubscriptionController {
 
-    @Autowired
-    private SubscriptionService service;
+    private final SubscriptionService service;
 
-    // GET /api/subscriptions - получить все подписки
+    public SubscriptionController(SubscriptionService service) {
+        this.service = service;
+    }
+
     @GetMapping
-    public List<Subscription> getAll() {
-        return service.getAllSubscriptions();
+    public List<SubscriptionResponse> getAll() {
+        return service.getAll()
+                .stream()
+                .map(SubscriptionResponse::from)
+                .collect(Collectors.toList());
     }
 
-    // POST /api/subscriptions - добавить новую подписку
     @PostMapping
-    public Subscription create(@RequestBody Subscription subscription) {
-        return service.addSubscription(subscription);
+    @ResponseStatus(HttpStatus.CREATED)
+    public SubscriptionResponse create(@Valid @RequestBody SubscriptionRequest request) {
+        Subscription sub = new Subscription();
+        sub.setName(request.getName());
+        sub.setPrice(request.getPrice());
+        sub.setBillingDate(request.getBillingDate());
+        sub.setCategory(request.getCategory());
+        sub.setBillingCycle(request.getBillingCycle());
+        return SubscriptionResponse.from(service.save(sub));
     }
 
-    // DELETE /api/subscriptions/{id} - удалить подписку
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        service.deleteSubscription(id);
+        service.delete(id);
     }
 
-    // GET /api/subscriptions/total - получить общую сумму в месяц
     @GetMapping("/total")
     public BigDecimal getTotal() {
         return service.getTotalMonthly();
