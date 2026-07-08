@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,7 +15,7 @@ public class Subscription {
     private Long id;
 
     private String name;
-    private Double price;
+    private BigDecimal price;
     private LocalDate billingDate;
     private String category;
 
@@ -32,8 +34,8 @@ public class Subscription {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public LocalDate getBillingDate() { return billingDate; }
     public void setBillingDate(LocalDate billingDate) { this.billingDate = billingDate; }
@@ -46,5 +48,8 @@ public class Subscription {
 
     @Enumerated(EnumType.STRING)   // хранит "MONTHLY", а не 0/1 — не сломается при добавлении новых значений
     @Column(nullable = false)
+
     private BillingCycle billingCycle = BillingCycle.MONTHLY;  // дефолт для старых записей
+    public BillingCycle getBillingCycle() { return billingCycle; }
+    public void setBillingCycle(BillingCycle billingCycle) { this.billingCycle = billingCycle; }
 }

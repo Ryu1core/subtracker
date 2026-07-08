@@ -5,6 +5,7 @@ import com.example.demo.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class SubscriptionController {
 
     // GET /api/subscriptions/total - получить общую сумму в месяц
     @GetMapping("/total")
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return service.getTotalMonthly();
     }
 }

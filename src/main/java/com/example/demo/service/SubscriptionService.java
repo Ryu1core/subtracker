@@ -5,6 +5,7 @@ import com.example.demo.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -28,13 +29,9 @@ public class SubscriptionService {
         repository.deleteById(id);
     }
 
-    // Посчитать сумму всех подписок в месяц
-    public Double getTotalMonthly() {
-        List<Subscription> all = repository.findAll();
-        double total = 0;
-        for (Subscription sub : all) {
-            total += sub.getPrice();
-        }
-        return total;
+    public BigDecimal getTotalMonthly() {
+        return repository.findAll().stream()
+                .map(s -> s.getBillingCycle().toMonthly(s.getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
