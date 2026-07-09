@@ -108,4 +108,4 @@ GET /api/subscriptions/total
 2. Скопировать настройки из `src/main/resources/application.properties`,
    подставить свой пароль от Postgres
 3. Запустить: `./gradlew bootRun` (Windows: `.\gradlew.bat bootRun`)
-4. API доступно на `http://localhost:8080` подписку
+4. API доступно на `http://localhost:8080`
