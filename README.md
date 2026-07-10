@@ -109,3 +109,66 @@ GET /api/subscriptions/total
    подставить свой пароль от Postgres
 3. Запустить: `./gradlew bootRun` (Windows: `.\gradlew.bat bootRun`)
 4. API доступно на `http://localhost:8080`
+
+## Авторизация
+
+API закрыто: все эндпоинты подписок требуют токен. Без токена — `401 Unauthorized`.
+
+### Флоу для фронтенда
+
+1. Юзер регистрируется (один раз) → `POST /api/auth/register`
+2. Юзер логинится → `POST /api/auth/login` → в ответе приходит **токен**
+3. Сохрани токен (например, в `localStorage`)
+4. Прикладывай его к **каждому** запросу к `/api/subscriptions/**` заголовком:
+   ​
+   Authorization: Bearer <токен>
+5. Токен живёт **24 часа**. Поймал `401` — токен протух или невалиден → отправляй юзера на экран логина
+
+### POST /api/auth/register — регистрация
+
+Запрос:
+​
+{
+"email": "user@mail.ru",
+"password": "secret123"
+}
+
+Правила: email — валидный адрес, пароль — минимум 6 символов.
+
+Ответы:
+- `201 Created` — успех:
+  ​
+  {
+  "id": 1,
+  "email": "user@mail.ru",
+  "createdAt": "2026-07-10T14:43:38"
+  }
+- `409 Conflict` — email уже занят
+- `400 Bad Request` — невалидные данные (в теле будет текст, что именно не так — можно показывать юзеру)
+
+### POST /api/auth/login — вход
+
+Запрос:
+​
+{
+"email": "user@mail.ru",
+"password": "secret123"
+}
+
+Ответы:
+- `200 OK` — успех:
+  ​
+  {
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QG1haWwucnUi..."
+  }
+- `401 Unauthorized` — неверный email или пароль (специально не уточняем, что именно, — так безопаснее)
+
+### Пример запроса с токеном
+
+​
+GET /api/subscriptions
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QG1haWwucnUi...
+
+⚠️ **Скоро:** подписки будут привязаны к юзеру — каждый увидит только свои. На фронте это ничего не меняет (тот же токен), просто данные станут персональными.
+
+⚠️ **CORS пока не настроен** — запросы из браузера с другого порта (например, l
