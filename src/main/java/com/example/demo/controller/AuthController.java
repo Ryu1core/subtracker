@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
@@ -21,5 +23,11 @@ public class AuthController {
     public UserResponse register(@Valid @RequestBody RegisterRequest request) {
         User user = userService.register(request);
         return new UserResponse(user.getId(), user.getEmail(), user.getCreatedAt());
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+        String token = userService.login(request);
+        return new AuthResponse(token);
     }
 }
