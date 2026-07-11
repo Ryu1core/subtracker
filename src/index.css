@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+* {
+    transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        color 0.3s ease;
+}
+
+.cozy-shadow {
+    box-shadow: 0 10px 30px -5px rgba(114, 131, 120, 0.06);
+}
+
+.ambient-bg {
+    background: radial-gradient(circle at 10% 20%, rgba(211, 222, 214, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(143, 168, 155, 0.2) 0%, transparent 50%);
+}
+
+.dark .ambient-bg {
+    background: radial-gradient(circle at 10% 20%, rgba(40, 52, 45, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(30, 41, 34, 0.3) 0%, transparent 50%);
+}

@@ -1,0 +1,51 @@
+{
+    "welcome": "Приветствуем снова",
+    "nav": {
+        "overview": "обзор",
+        "analytics": "аналитика",
+        "budget": "бюджет"
+    },
+    "status": {
+        "loading": "Подключение к системе Subtrack...",
+        "active_title": "Активные подписки",
+        "active_unit": "сервисов",
+        "active_footer_1": "Всё работает ",
+        "active_footer_2": "стабильно",
+        "expenses_title": "Расходы в месяц",
+        "expenses_footer": "Рассчитано через Spring Boot API",
+        "urgent_title": "Срочный обзор",
+        "urgent_footer": "Истекают в ближайшие 3 дня",
+        "urgent_unit_one": "сервис",
+        "urgent_unit_many": "сервисов",
+        "average_title": "Средняя стоимость",
+        "average_footer": "За один активный сервис"
+    },
+    "analytics": {
+        "title": "Распределение ресурсов",
+        "no_data": "НЕТ ДАННЫХ",
+        "others": "ПРОЧЕЕ",
+        "notes_title": "Системные заметки",
+        "notes_db_title": "Интеграция с базой данных:",
+        "notes_db_desc": "Подключено к базе Postgres 17. Цикл синхронизации стабилен.",
+        "weight_label": "Текущий вес активного пула:"
+    },
+    "registry": {
+        "title": "Ваш спокойный реестр",
+        "subtitle": "Реальные записи с сервера subtrack",
+        "btn_add": "+ Добавить подписку",
+        "btn_cancel": "Отмена",
+        "btn_save": "Сохранить в базу",
+        "btn_delete": "Удалить",
+        "no_records": "Активных записей в Postgres не найдено.",
+        "th_service": "Сервис",
+        "th_timeline": "Сроки",
+        "th_cycle": "Период",
+        "th_rate": "Тариф",
+        "th_actions": "Действия",
+        "next_bill": "Списание:",
+        "placeholder_name": "Название (например, Spotify)",
+        "placeholder_price": "Цена (например, 9.99)",
+        "placeholder_category": "Категория",
+        "form_error": "Пожалуйста, заполните все обязательные поля."
+    }
+}

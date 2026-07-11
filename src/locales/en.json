@@ -1,0 +1,51 @@
+{
+    "welcome": "Welcome back",
+    "nav": {
+        "overview": "overview",
+        "analytics": "analytics",
+        "budget": "budget"
+    },
+    "status": {
+        "loading": "Connecting to Subtrack System...",
+        "active_title": "Subscriptions Active",
+        "active_unit": "services",
+        "active_footer_1": "Everything is running ",
+        "active_footer_2": "smoothly",
+        "expenses_title": "Monthly Expenses",
+        "expenses_footer": "Calculated by Spring Boot API",
+        "urgent_title": "Urgent Review",
+        "urgent_footer": "Expiring in less than 3 days",
+        "urgent_unit_one": "service",
+        "urgent_unit_many": "services",
+        "average_title": "Average Cost",
+        "average_footer": "Per single active service"
+    },
+    "analytics": {
+        "title": "Resource Allocation",
+        "no_data": "NO DATA",
+        "others": "OTHERS",
+        "notes_title": "Mindful System Notes",
+        "notes_db_title": "Live Database Integration:",
+        "notes_db_desc": "Connected to Postgres 17 database. Sync cycle is stable.",
+        "weight_label": "Current active pool weight:"
+    },
+    "registry": {
+        "title": "Your Calm Registry",
+        "subtitle": "Live records from subtrack server",
+        "btn_add": "+ Add New Entry",
+        "btn_cancel": "Cancel",
+        "btn_save": "Save to Database",
+        "btn_delete": "Delete",
+        "no_records": "No active records found in Postgres.",
+        "th_service": "Service",
+        "th_timeline": "Timeline",
+        "th_cycle": "Cycle",
+        "th_rate": "Rate",
+        "th_actions": "Actions",
+        "next_bill": "Next bill:",
+        "placeholder_name": "Service Name (e.g. Spotify)",
+        "placeholder_price": "Price (e.g. 9.99)",
+        "placeholder_category": "Category",
+        "form_error": "Please fill out all mandatory fields."
+    }
+}
