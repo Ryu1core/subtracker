@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // регистрация и логин — свободный вход
-                        .anyRequest().authenticated())               // всё остальное — только с токеном
+                        .anyRequest().authenticated())
                 // без токена отвечать честным 401, а не чем попало
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

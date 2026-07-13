@@ -19,8 +19,9 @@ public class User {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // геттеры и сеттеры (сгенерируй в IDEA: Alt+Insert → Getter and Setter)
+    // геттеры и сеттеры
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }

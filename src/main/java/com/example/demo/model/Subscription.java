@@ -19,6 +19,11 @@ public class Subscription {
     private LocalDate billingDate;
     private String category;
 
+    // Владелец подписки. "Много подписок — один юзер"
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -43,13 +48,16 @@ public class Subscription {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
+    public User getOwner() { return owner; }
+    public void setOwner(User owner) { this.owner = owner; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     @Enumerated(EnumType.STRING)   // хранит "MONTHLY", а не 0/1 — не сломается при добавлении новых значений
     @Column(nullable = false)
-
     private BillingCycle billingCycle = BillingCycle.MONTHLY;  // дефолт для старых записей
+
     public BillingCycle getBillingCycle() { return billingCycle; }
     public void setBillingCycle(BillingCycle billingCycle) { this.billingCycle = billingCycle; }
 }
