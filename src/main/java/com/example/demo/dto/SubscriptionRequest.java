@@ -65,4 +65,14 @@ public class SubscriptionRequest {
     public void setBillingCycle(BillingCycle billingCycle) {
         this.billingCycle = billingCycle;
     }
+    // Необязательное поле: дата конца триала, если подписка пробная
+    private LocalDate trialEndDate;
+
+    public LocalDate getTrialEndDate() {
+        return trialEndDate;
+    }
+
+    public void setTrialEndDate(LocalDate trialEndDate) {
+        this.trialEndDate = trialEndDate;
+    }
 }

@@ -62,6 +62,7 @@ public class SubscriptionService {
         existing.setBillingDate(updated.getBillingDate());
         existing.setCategory(updated.getCategory());
         existing.setBillingCycle(updated.getBillingCycle());
+        existing.setTrialEndDate(updated.getTrialEndDate());
         return repository.save(existing);
     }
 

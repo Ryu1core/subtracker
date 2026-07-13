@@ -51,6 +51,13 @@ public class Subscription {
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
 
+    // Когда закончится пробный период. null = это не триал
+    @Column(name = "trial_end_date")
+    private LocalDate trialEndDate;
+
+    public LocalDate getTrialEndDate() { return trialEndDate; }
+    public void setTrialEndDate(LocalDate trialEndDate) { this.trialEndDate = trialEndDate; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 

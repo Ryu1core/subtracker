@@ -39,6 +39,7 @@ public class SubscriptionController {
         sub.setBillingDate(request.getBillingDate());
         sub.setCategory(request.getCategory());
         sub.setBillingCycle(request.getBillingCycle());
+        sub.setTrialEndDate(request.getTrialEndDate());
         return SubscriptionResponse.from(service.save(sub));
     }
 
@@ -51,6 +52,7 @@ public class SubscriptionController {
         sub.setBillingDate(request.getBillingDate());
         sub.setCategory(request.getCategory());
         sub.setBillingCycle(request.getBillingCycle());
+        sub.setTrialEndDate(request.getTrialEndDate());
         return SubscriptionResponse.from(service.update(id, sub));
     }
 
