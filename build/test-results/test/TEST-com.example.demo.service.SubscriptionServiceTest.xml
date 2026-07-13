@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.service.SubscriptionServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-07-13T12:08:41.106Z" hostname="DESKTOP-052KD8G" time="2.159">
+<testsuite name="com.example.demo.service.SubscriptionServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-07-13T21:21:42.812Z" hostname="DESKTOP-052KD8G" time="2.447">
   <properties/>
-  <testcase name="totalMonthly_normalizesMixedCycles()" classname="com.example.demo.service.SubscriptionServiceTest" time="2.139"/>
+  <testcase name="totalMonthly_normalizesMixedCycles()" classname="com.example.demo.service.SubscriptionServiceTest" time="2.417"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

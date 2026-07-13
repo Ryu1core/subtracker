@@ -13,6 +13,7 @@ public class SubscriptionResponse {
     private String name;
     private BigDecimal price;
     private LocalDate billingDate;
+    private LocalDate nextBillingDate;   // вычисляется, в базе не хранится
     private String category;
     private BillingCycle billingCycle;
     private LocalDateTime createdAt;
@@ -24,6 +25,8 @@ public class SubscriptionResponse {
         dto.name = s.getName();
         dto.price = s.getPrice();
         dto.billingDate = s.getBillingDate();
+        dto.nextBillingDate = s.getBillingCycle()
+                .nextBilling(s.getBillingDate(), LocalDate.now());
         dto.category = s.getCategory();
         dto.billingCycle = s.getBillingCycle();
         dto.createdAt = s.getCreatedAt();
@@ -35,6 +38,7 @@ public class SubscriptionResponse {
     public String getName() { return name; }
     public BigDecimal getPrice() { return price; }
     public LocalDate getBillingDate() { return billingDate; }
+    public LocalDate getNextBillingDate() { return nextBillingDate; }
     public String getCategory() { return category; }
     public BillingCycle getBillingCycle() { return billingCycle; }
     public LocalDateTime getCreatedAt() { return createdAt; }

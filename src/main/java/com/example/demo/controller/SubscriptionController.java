@@ -64,4 +64,11 @@ public class SubscriptionController {
     public BigDecimal getTotal() {
         return service.getTotalMonthly();
     }
+
+    @GetMapping("/upcoming")
+    public List<SubscriptionResponse> getUpcoming(@RequestParam(defaultValue = "7") int days) {
+        return service.getUpcoming(days).stream()
+                .map(SubscriptionResponse::from)
+                .collect(Collectors.toList());
+    }
 }

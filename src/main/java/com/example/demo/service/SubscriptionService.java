@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -33,8 +35,7 @@ public class SubscriptionService {
     }
 
     // Достать подписку И проверить, что она принадлежит текущему юзеру.
-    // Чужая или несуществующая → одинаковый 404, чтобы нельзя было
-    // перебором id выяснять, какие подписки есть у других
+    // Чужая или несуществующая → одинаковый 404
     private Subscription getOwnedOrThrow(Long id) {
         Subscription sub = repository.findById(id)
                 .orElseThrow(() -> new SubscriptionNotFoundException(id));
@@ -50,7 +51,7 @@ public class SubscriptionService {
     }
 
     public Subscription save(Subscription subscription) {
-        subscription.setOwner(getCurrentUser()); // владелец — из токена, фронт его не передаёт
+        subscription.setOwner(getCurrentUser());
         return repository.save(subscription);
     }
 
@@ -73,5 +74,17 @@ public class SubscriptionService {
         return repository.findByOwner(getCurrentUser()).stream()
                 .map(s -> s.getBillingCycle().toMonthly(s.getPrice()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /** Подписки текущего юзера, у которых списание в ближайшие days дней. */
+    public List<Subscription> getUpcoming(int days) {
+        LocalDate today = LocalDate.now();
+        LocalDate limit = today.plusDays(days);
+        return repository.findByOwner(getCurrentUser()).stream()
+                .filter(s -> !s.getBillingCycle()
+                        .nextBilling(s.getBillingDate(), today).isAfter(limit))
+                .sorted(Comparator.comparing((Subscription s) ->
+                        s.getBillingCycle().nextBilling(s.getBillingDate(), today)))
+                .toList();
     }
 }
