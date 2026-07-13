@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.demo.model.BillingCycleTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-07-13T21:21:42.751Z" hostname="DESKTOP-052KD8G" time="0.045">
-  <properties/>
-  <testcase name="futureDateStaysAsIs()" classname="com.example.demo.model.BillingCycleTest" time="0.021"/>
-  <testcase name="oldYearlyRollsSeveralYears()" classname="com.example.demo.model.BillingCycleTest" time="0.005"/>
-  <testcase name="pastMonthlyRollsForward()" classname="com.example.demo.model.BillingCycleTest" time="0.003"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
