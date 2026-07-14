@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.PriceHistoryResponse;
 import com.example.demo.dto.SubscriptionRequest;
 import com.example.demo.dto.SubscriptionResponse;
 import com.example.demo.model.Subscription;
@@ -71,6 +72,12 @@ public class SubscriptionController {
     public List<SubscriptionResponse> getUpcoming(@RequestParam(defaultValue = "7") int days) {
         return service.getUpcoming(days).stream()
                 .map(SubscriptionResponse::from)
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/{id}/price-history")
+    public List<PriceHistoryResponse> getPriceHistory(@PathVariable Long id) {
+        return service.getPriceHistory(id).stream()
+                .map(PriceHistoryResponse::from)
                 .collect(Collectors.toList());
     }
 }

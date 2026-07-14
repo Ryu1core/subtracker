@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.SubscriptionNotFoundException;
+import com.example.demo.model.PriceHistory;
 import com.example.demo.model.Subscription;
 import com.example.demo.model.User;
+import com.example.demo.repository.PriceHistoryRepository;
 import com.example.demo.repository.SubscriptionRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,12 @@ public class SubscriptionService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PriceHistoryRepository priceHistoryRepository;
+
+    @Autowired
+    private NotificationSender notificationSender;
 
     // Кто сейчас стучится в API? Email положил в SecurityContext наш JwtAuthFilter
     private User getCurrentUser() {
@@ -57,13 +65,39 @@ public class SubscriptionService {
 
     public Subscription update(Long id, Subscription updated) {
         Subscription existing = getOwnedOrThrow(id);
+
+        BigDecimal oldPrice = existing.getPrice();
+        BigDecimal newPrice = updated.getPrice();
+        // BigDecimal сравниваем ТОЛЬКО через compareTo!
+        // equals считает 649 и 649.00 РАЗНЫМИ числами (разный масштаб)
+        boolean priceChanged = oldPrice.compareTo(newPrice) != 0;
+
         existing.setName(updated.getName());
-        existing.setPrice(updated.getPrice());
+        existing.setPrice(newPrice);
         existing.setBillingDate(updated.getBillingDate());
         existing.setCategory(updated.getCategory());
         existing.setBillingCycle(updated.getBillingCycle());
         existing.setTrialEndDate(updated.getTrialEndDate());
-        return repository.save(existing);
+        Subscription saved = repository.save(existing);
+
+        if (priceChanged) {
+            PriceHistory history = new PriceHistory();
+            history.setSubscription(saved);
+            history.setOldPrice(oldPrice);
+            history.setNewPrice(newPrice);
+            priceHistoryRepository.save(history);
+
+            // Алерт только на подорожание: снижению цены радуемся молча
+            if (newPrice.compareTo(oldPrice) > 0) {
+                notificationSender.send(
+                        saved.getOwner().getEmail(),
+                        "Subtracker: «" + saved.getName() + "» подорожала",
+                        "Внимание!\n\nЦена подписки «" + saved.getName()
+                                + "» выросла с " + oldPrice + " до " + newPrice
+                                + ".\n\nМожет, пора её пересмотреть?\n\n— Subtracker");
+            }
+        }
+        return saved;
     }
 
     public void delete(Long id) {
@@ -87,5 +121,11 @@ public class SubscriptionService {
                 .sorted(Comparator.comparing((Subscription s) ->
                         s.getBillingCycle().nextBilling(s.getBillingDate(), today)))
                 .toList();
+    }
+
+    /** История изменений цены (свежие сверху). Чужая подписка → 404. */
+    public List<PriceHistory> getPriceHistory(Long id) {
+        return priceHistoryRepository
+                .findBySubscriptionOrderByChangedAtDesc(getOwnedOrThrow(id));
     }
 }
