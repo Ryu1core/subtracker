@@ -25,3 +25,5 @@ dist-ssr
 # Gradle
 build/
 .gradle/
+# Локальные настройки с секретами
+src/main/resources/application.properties
