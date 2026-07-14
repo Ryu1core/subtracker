@@ -20,14 +20,26 @@ public class ReminderService {
     @Autowired
     private SubscriptionRepository repository;
 
+    // Заметь: тип — интерфейс, а не EmailSender. Spring сам подставит
+    // единственную реализацию. Появится TelegramSender — поменяем не трогая этот код
+    @Autowired
+    private NotificationSender notificationSender;
+
+    // ВРЕМЕННО для проверки: каждую минуту. Боевой: "0 0 10 * * *"
     @Scheduled(cron = "0 0 10 * * *")
-    @Transactional(readOnly = true) // держим сессию с БД, чтобы дотянуться до lazy-владельца
+    @Transactional(readOnly = true)
     public void remindAboutEndingTrials() {
         LocalDate target = LocalDate.now().plusDays(2);
         List<Subscription> ending = repository.findByTrialEndDate(target);
         for (Subscription s : ending) {
-            log.info("⏰ НАПОМИНАНИЕ для {}: триал «{}» заканчивается {} — отмени, или спишется {}!",
-                    s.getOwner().getEmail(), s.getName(), s.getTrialEndDate(), s.getPrice());
+            String email = s.getOwner().getEmail();
+            log.info("⏰ Шлю напоминание на {} о триале «{}»", email, s.getName());
+            notificationSender.send(
+                    email,
+                    "Subtracker: триал «" + s.getName() + "» скоро закончится",
+                    "Привет!\n\nПробный период «" + s.getName() + "» заканчивается "
+                            + s.getTrialEndDate() + ". Если не отменить, спишется "
+                            + s.getPrice() + ".\n\n— Subtracker");
         }
     }
 }
