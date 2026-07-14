@@ -1,16 +1,90 @@
-# React + Vite
+# Subtracker API — документация для фронтенда
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Бэкенд: Java 17 + Spring Boot, PostgreSQL. Все запросы в разработке идут через Vite-прокси: фронт стучится в `/api/...`, прокси сам переправляет на `localhost:8080` (бэкенд должен быть запущен параллельно).
 
-Currently, two official plugins are available:
+## Как запустить бэкенд
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Установи PostgreSQL 17, создай базу `subtrack`
+2. Скопируй `src/main/resources/application-example.properties` в `application.properties` (та же папка) и подставь свои значения — пароль от Postgres, любую случайную строку в `jwt.secret` (64 символа), почтовые ключи можно пока не трогать, если не тестируешь письма
+3. Запусти: `.\gradlew.bat bootRun` (Windows) — поднимется на `localhost:8080`. Таблицы в базе создадутся сами
 
-## React Compiler
+## ⚠️ Главное изменение: теперь всё под авторизацией
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Анонимного доступа к подпискам больше нет. Каждый пользователь видит **только свои** подписки.
 
-## Expanding the Oxlint configuration
+Схема для фронта:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+1. Зарегистрировать/залогинить пользователя → получить **токен**
+2. Хранить токен (например, в localStorage)
+3. Слать его в заголовке **на каждый запрос** к `/api/subscriptions/...`:
+   `Authorization: Bearer <токен>`
+4. Токен живёт **24 часа**. Если сервер ответил `401` — токен протух или отсутствует: редиректим на экран логина
+
+## Авторизация
+
+### POST /api/auth/register
+Тело: `{"email": "user@mail.com", "password": "минимум 6 символов"}`
+Ответы: `201` + `{"id": 1, "email": "...", "createdAt": "..."}` · `409` — email занят · `400` — невалидные данные
+
+### POST /api/auth/login
+Тело: `{"email": "...", "password": "..."}`
+Ответы: `200` + `{"token": "eyJ..."}` · `401` — неверный email или пароль
+
+## Подписки (все запросы — с токеном!)
+
+### GET /api/subscriptions
+Список подписок текущего пользователя:
+
+[{
+"id": 5,
+"name": "Netflix",
+"price": 749.00,
+"billingDate": "2026-07-16",
+"nextBillingDate": "2026-07-16",
+"trialEndDate": null,
+"category": "video",
+"billingCycle": "MONTHLY",
+"createdAt": "2026-07-14T23:45:26"
+}]
+Новые поля:
+- **nextBillingDate** — дата СЛЕДУЮЩЕГО списания, бэк вычисляет сам из billingDate и цикла. Для отображения «когда спишется» используй её, а не billingDate (billingDate может быть в прошлом)
+- **trialEndDate** — дата конца пробного периода. `null` = обычная подписка. За 2 дня до конца триала бэк сам шлёт пользователю письмо
+
+### POST /api/subscriptions
+Тело: `{"name": "...", "price": 649, "billingDate": "2026-08-01", "category": "video", "billingCycle": "MONTHLY", "trialEndDate": "2026-08-01"}`
+- `billingCycle`: `WEEKLY` | `MONTHLY` | `QUARTERLY` | `YEARLY`
+- `trialEndDate` — необязательное, можно не слать
+- Ответ: `201` + созданная подписка
+
+### PUT /api/subscriptions/{id}
+Тело такое же, как у POST. Ответ: `200` + обновлённая подписка.
+Если цена изменилась — бэк сам запишет это в историю цен, а при подорожании пришлёт пользователю письмо.
+
+### DELETE /api/subscriptions/{id}
+Ответ: `204` без тела
+
+### GET /api/subscriptions/total
+Суммарная стоимость всех подписок пользователя **в месяц** (годовые/недельные нормализуются). Ответ: число, например `749.00`
+
+### GET /api/subscriptions/upcoming?days=7
+Подписки, у которых списание в ближайшие N дней (по умолчанию 7), отсортированы по дате. Формат как у GET-списка. Готовый источник для виджета «скоро спишется»
+
+### GET /api/subscriptions/{id}/price-history
+История изменений цены (свежие сверху):
+​
+[{"oldPrice": 649.00, "newPrice": 749.00, "changedAt": "2026-07-15T00:50:42"}]
+
+## Ошибки
+- `400` — невалидное тело (в ответе есть `message`)
+- `401` — нет токена / протух / неверный
+- `404` — подписки нет ИЛИ она чужая (специально неразличимо)
+- `409` — только при регистрации, email занят
+
+## TODO на фронте
+- [ ] Экраны регистрации и логина
+- [ ] Хранение токена + заголовок `Authorization: Bearer <токен>` на все запросы к подпискам
+- [ ] Обработка `401` → выкидывать на логин
+- [ ] Использовать `nextBillingDate` вместо `billingDate` в списке и графиках
+- [ ] Бейдж «Триал до …» на карточке, если `trialEndDate != null` (+ поле в форме создания)
+- [ ] Виджет «Ближайшие списания» на `/upcoming` (вкладка Аналитика?)
+- [ ] История цен на карточке подписки (`/price-history`)
