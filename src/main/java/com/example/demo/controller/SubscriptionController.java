@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.PriceHistoryResponse;
-import com.example.demo.dto.SubscriptionRequest;
-import com.example.demo.dto.SubscriptionResponse;
+import com.example.demo.dto.*;
 import com.example.demo.model.Subscription;
 import com.example.demo.service.SubscriptionService;
 import jakarta.validation.Valid;
@@ -79,5 +77,28 @@ public class SubscriptionController {
         return service.getPriceHistory(id).stream()
                 .map(PriceHistoryResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{id}/members")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MemberResponse addMember(@PathVariable Long id,
+                                    @Valid @RequestBody MemberRequest request) {
+        return service.addMember(id, request.getName());
+    }
+
+    @GetMapping("/{id}/members")
+    public List<MemberResponse> getMembers(@PathVariable Long id) {
+        return service.getMembers(id);
+    }
+
+    @DeleteMapping("/{id}/members/{memberId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeMember(@PathVariable Long id, @PathVariable Long memberId) {
+        service.removeMember(id, memberId);
+    }
+
+    @GetMapping("/debts")
+    public List<DebtResponse> getDebts() {
+        return service.getDebts();
     }
 }
