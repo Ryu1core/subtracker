@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.model.Subscription;
+import com.example.demo.service.SubscriptionMemberService;
 import com.example.demo.service.SubscriptionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,13 @@ import java.util.stream.Collectors;
 public class SubscriptionController {
 
     private final SubscriptionService service;
+    private final SubscriptionMemberService memberService;
 
-    public SubscriptionController(SubscriptionService service) {
+    // Spring видит два параметра и сам подставляет оба сервиса
+    public SubscriptionController(SubscriptionService service,
+                                  SubscriptionMemberService memberService) {
         this.service = service;
+        this.memberService = memberService;
     }
 
     @GetMapping
@@ -72,6 +77,7 @@ public class SubscriptionController {
                 .map(SubscriptionResponse::from)
                 .collect(Collectors.toList());
     }
+
     @GetMapping("/{id}/price-history")
     public List<PriceHistoryResponse> getPriceHistory(@PathVariable Long id) {
         return service.getPriceHistory(id).stream()
@@ -83,22 +89,22 @@ public class SubscriptionController {
     @ResponseStatus(HttpStatus.CREATED)
     public MemberResponse addMember(@PathVariable Long id,
                                     @Valid @RequestBody MemberRequest request) {
-        return service.addMember(id, request.getName());
+        return memberService.addMember(id, request.getName());
     }
 
     @GetMapping("/{id}/members")
     public List<MemberResponse> getMembers(@PathVariable Long id) {
-        return service.getMembers(id);
+        return memberService.getMembers(id);
     }
 
     @DeleteMapping("/{id}/members/{memberId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeMember(@PathVariable Long id, @PathVariable Long memberId) {
-        service.removeMember(id, memberId);
+        memberService.removeMember(id, memberId);
     }
 
     @GetMapping("/debts")
     public List<DebtResponse> getDebts() {
-        return service.getDebts();
+        return memberService.getDebts();
     }
 }
