@@ -1,7 +1,6 @@
-<p align="center">
-  <h1 align="center">💸 Subtracker</h1>
-  <p align="center"><b>Privacy-first трекер подписок</b> — все подписки под контролем: сколько уходит в месяц, когда спишут деньги и кто из друзей сколько должен.<br/>Без доступа к банку. Данные не покидают ваш сервер.</p>
-</p>
+<h1 align="center">💸 Subtracker</h1>
+
+<p align="center"><b>Privacy-first трекер подписок</b> — все подписки под контролем: сколько уходит в месяц, когда спишут деньги и кто из друзей сколько должен.<br/>Без доступа к банку. Данные не покидают ваш сервер.</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17-orange?logo=openjdk&logoColor=white" alt="Java 17"/>
