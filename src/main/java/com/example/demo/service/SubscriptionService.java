@@ -11,6 +11,8 @@ import com.example.demo.repository.PriceHistoryRepository;
 import com.example.demo.repository.SubscriptionMemberRepository;
 import com.example.demo.repository.SubscriptionRepository;
 import com.example.demo.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,8 @@ import java.util.Map;
 
 @Service
 public class SubscriptionService {
+
+    private static final Logger log = LoggerFactory.getLogger(SubscriptionService.class);
 
     @Autowired
     private SubscriptionRepository repository;
@@ -99,12 +103,19 @@ public class SubscriptionService {
 
             // Алерт только на подорожание: снижению цены радуемся молча
             if (newPrice.compareTo(oldPrice) > 0) {
-                notificationSender.send(
-                        saved.getOwner().getEmail(),
-                        "Subtracker: «" + saved.getName() + "» подорожала",
-                        "Внимание!\n\nЦена подписки «" + saved.getName()
-                                + "» выросла с " + oldPrice + " до " + newPrice
-                                + ".\n\nМожет, пора её пересмотреть?\n\n— Subtracker");
+                try {
+                    notificationSender.send(
+                            saved.getOwner().getEmail(),
+                            "Subtracker: «" + saved.getName() + "» подорожала",
+                            "Внимание!\n\nЦена подписки «" + saved.getName()
+                                    + "» выросла с " + oldPrice + " до " + newPrice
+                                    + ".\n\nМожет, пора её пересмотреть?\n\n— Subtracker");
+                } catch (Exception e) {
+                    // Почта упала — не страшно: подписка и история уже сохранены.
+                    // Юзер должен получить свой 200, а не 500 из-за письма
+                    log.warn("Не смог отправить алерт о подорожании «{}»: {}",
+                            saved.getName(), e.getMessage());
+                }
             }
         }
         return saved;

@@ -20,12 +20,12 @@ public class ReminderService {
     @Autowired
     private SubscriptionRepository repository;
 
-    // Заметь: тип — интерфейс, а не EmailSender. Spring сам подставит
-    // единственную реализацию. Появится TelegramSender — поменяем не трогая этот код
+    // Тип — интерфейс, а не EmailSender. Spring сам подставит
+    // единственную реализацию. Появится TelegramSender — этот код не трогаем
     @Autowired
     private NotificationSender notificationSender;
 
-    // ВРЕМЕННО для проверки: каждую минуту. Боевой: "0 0 10 * * *"
+    // Каждый день в 10:00 по времени сервера
     @Scheduled(cron = "0 0 10 * * *")
     @Transactional(readOnly = true)
     public void remindAboutEndingTrials() {
@@ -34,12 +34,18 @@ public class ReminderService {
         for (Subscription s : ending) {
             String email = s.getOwner().getEmail();
             log.info("⏰ Шлю напоминание на {} о триале «{}»", email, s.getName());
-            notificationSender.send(
-                    email,
-                    "Subtracker: триал «" + s.getName() + "» скоро закончится",
-                    "Привет!\n\nПробный период «" + s.getName() + "» заканчивается "
-                            + s.getTrialEndDate() + ". Если не отменить, спишется "
-                            + s.getPrice() + ".\n\n— Subtracker");
+            try {
+                notificationSender.send(
+                        email,
+                        "Subtracker: триал «" + s.getName() + "» скоро закончится",
+                        "Привет!\n\nПробный период «" + s.getName() + "» заканчивается "
+                                + s.getTrialEndDate() + ". Если не отменить, спишется "
+                                + s.getPrice() + ".\n\n— Subtracker");
+            } catch (Exception e) {
+                // Одно упавшее письмо НЕ должно убить напоминания остальным юзерам.
+                // Ловим, пишем в лог и идём к следующей подписке
+                log.warn("Не смог отправить напоминание на {}: {}", email, e.getMessage());
+            }
         }
     }
 }
