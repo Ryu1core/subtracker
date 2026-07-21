@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.DebtResponse;
 import com.example.demo.dto.MemberResponse;
-import com.example.demo.exception.SubscriptionNotFoundException;
+import com.example.demo.exception.MemberNotFoundException;
 import com.example.demo.model.BillingCycle;
 import com.example.demo.model.Subscription;
 import com.example.demo.model.SubscriptionMember;
@@ -118,8 +118,8 @@ class SubscriptionMemberServiceTest {
         when(subscriptionService.getOwnedOrThrow(1L)).thenReturn(netflix);
         when(memberRepository.findById(5L)).thenReturn(Optional.of(foreign));
 
-        // участник другой подписки → 404, и delete НЕ вызывается
-        assertThrows(SubscriptionNotFoundException.class,
+        // участник другой подписки → честный 404 про УЧАСТНИКА, и delete НЕ вызывается
+        assertThrows(MemberNotFoundException.class,
                 () -> service.removeMember(1L, 5L));
         verify(memberRepository, never()).delete(any());
     }

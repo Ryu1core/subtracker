@@ -21,9 +21,10 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
-    @ExceptionHandler(SubscriptionNotFoundException.class)
+    // Один обработчик на обе "не найдено"-ошибки: и подписка, и участник → 404
+    @ExceptionHandler({SubscriptionNotFoundException.class, MemberNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFound(SubscriptionNotFoundException ex) {
+    public Map<String, String> handleNotFound(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
         return error;

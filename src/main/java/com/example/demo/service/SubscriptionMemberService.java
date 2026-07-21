@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.DebtResponse;
 import com.example.demo.dto.MemberResponse;
-import com.example.demo.exception.SubscriptionNotFoundException;
+import com.example.demo.exception.MemberNotFoundException;
 import com.example.demo.model.Subscription;
 import com.example.demo.model.SubscriptionMember;
 import com.example.demo.repository.SubscriptionMemberRepository;
@@ -61,12 +61,15 @@ public class SubscriptionMemberService {
 
     public void removeMember(Long subscriptionId, Long memberId) {
         Subscription sub = subscriptionService.getOwnedOrThrow(subscriptionId);
+
         SubscriptionMember member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new SubscriptionNotFoundException(memberId));
-        // Участник должен принадлежать именно ЭТОЙ подписке — иначе 404
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        // участник существует, но принадлежит другой подписке — тоже "не найден"
         if (!member.getSubscription().getId().equals(sub.getId())) {
-            throw new SubscriptionNotFoundException(memberId);
+            throw new MemberNotFoundException(memberId);
         }
+
         memberRepository.delete(member);
     }
 
