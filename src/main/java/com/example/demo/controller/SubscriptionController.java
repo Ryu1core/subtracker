@@ -4,6 +4,7 @@ import com.example.demo.dto.*;
 import com.example.demo.model.Subscription;
 import com.example.demo.service.SubscriptionMemberService;
 import com.example.demo.service.SubscriptionService;
+import com.example.demo.dto.GhostResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -106,5 +107,16 @@ public class SubscriptionController {
     @GetMapping("/debts")
     public List<DebtResponse> getDebts() {
         return memberService.getDebts();
+    }
+    // "Я этим пользовался": POST /api/subscriptions/{id}/used
+    @PostMapping("/{id}/used")
+    public void markUsed(@PathVariable Long id) {
+        service.markUsed(id);
+    }
+
+    // Отчёт по призракам: GET /api/subscriptions/ghosts
+    @GetMapping("/ghosts")
+    public List<GhostResponse> getGhosts() {
+        return service.getGhosts();
     }
 }

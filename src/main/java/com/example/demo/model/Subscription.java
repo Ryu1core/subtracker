@@ -67,4 +67,12 @@ public class Subscription {
 
     public BillingCycle getBillingCycle() { return billingCycle; }
     public void setBillingCycle(BillingCycle billingCycle) { this.billingCycle = billingCycle; }
+
+    // ===== NEW: Ghost score =====
+    // Когда юзер в последний раз пользовался подпиской. null = ни разу не отмечал
+    @Column(name = "last_used_at")
+    private LocalDateTime lastUsedAt;
+
+    public LocalDateTime getLastUsedAt() { return lastUsedAt; }
+    public void setLastUsedAt(LocalDateTime lastUsedAt) { this.lastUsedAt = lastUsedAt; }
 }

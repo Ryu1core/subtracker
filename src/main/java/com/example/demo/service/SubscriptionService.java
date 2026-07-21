@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.GhostResponse;
 import com.example.demo.exception.SubscriptionNotFoundException;
 import com.example.demo.model.PriceHistory;
 import com.example.demo.model.Subscription;
@@ -17,6 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -138,5 +142,35 @@ public class SubscriptionService {
     public List<PriceHistory> getPriceHistory(Long id) {
         return priceHistoryRepository
                 .findBySubscriptionOrderByChangedAtDesc(getOwnedOrThrow(id));
+    }
+    /** Отметить: "я сегодня пользовался этой подпиской". */
+    public void markUsed(Long id) {
+        Subscription sub = getOwnedOrThrow(id);
+        sub.setLastUsedAt(LocalDateTime.now());
+        repository.save(sub);
+    }
+
+    /**
+     * Подписки-призраки: не использовались 30+ дней.
+     * Если lastUsedAt пуст (ни разу не отмечали) — считаем от даты создания.
+     */
+    public List<GhostResponse> getGhosts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<GhostResponse> ghosts = new ArrayList<>();
+
+        for (Subscription sub : getAll()) {
+            LocalDateTime lastActivity = sub.getLastUsedAt() != null
+                    ? sub.getLastUsedAt()
+                    : sub.getCreatedAt();
+
+            long daysUnused = ChronoUnit.DAYS.between(lastActivity, now);
+            if (daysUnused >= 30) {
+                ghosts.add(GhostResponse.from(sub, daysUnused));
+            }
+        }
+
+        // самые дорогие призраки сверху
+        ghosts.sort(Comparator.comparing(GhostResponse::getMonthlyPrice).reversed());
+        return ghosts;
     }
 }
