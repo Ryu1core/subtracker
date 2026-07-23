@@ -1,26 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-cozy-bg: #f3f5f3;
+  --color-cozy-card: #ffffff;
+  --color-cozy-text: #2c3531;
+  --color-cozy-muted: #829188;
+  --color-cozy-accent: #526e60;
+  --color-cozy-accent-hover: #435b4f;
+  --color-cozy-border: #e1e7e3;
+  --color-cozy-alert: #d96b62;
+
+  --color-cozy-dark-bg: #161917;
+  --color-cozy-dark-card: #1f2421;
+  --color-cozy-dark-text: #e1e7e3;
+  --color-cozy-dark-muted: #7b8a81;
+  --color-cozy-dark-border: #2a322c;
+
+  --radius-cozy: 20px;
+}
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
-
-* {
-    transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-        border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-        color 0.3s ease;
-}
-
-.cozy-shadow {
-    box-shadow: 0 10px 30px -5px rgba(114, 131, 120, 0.06);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .ambient-bg {
-    background: radial-gradient(circle at 10% 20%, rgba(211, 222, 214, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(143, 168, 155, 0.2) 0%, transparent 50%);
+  background-attachment: fixed;
 }
 
-.dark .ambient-bg {
-    background: radial-gradient(circle at 10% 20%, rgba(40, 52, 45, 0.5) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(30, 41, 34, 0.3) 0%, transparent 50%);
+/* Сглаживание и аккуратный скроллбар */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-cozy-border);
+  border-radius: 99px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-cozy-dark-border);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

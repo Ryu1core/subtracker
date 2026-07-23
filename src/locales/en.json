@@ -1,51 +1,63 @@
 {
-    "welcome": "Welcome back",
-    "nav": {
-        "overview": "overview",
-        "analytics": "analytics",
-        "budget": "budget"
-    },
-    "status": {
-        "loading": "Connecting to Subtrack System...",
-        "active_title": "Subscriptions Active",
-        "active_unit": "services",
-        "active_footer_1": "Everything is running ",
-        "active_footer_2": "smoothly",
-        "expenses_title": "Monthly Expenses",
-        "expenses_footer": "Calculated by Spring Boot API",
-        "urgent_title": "Urgent Review",
-        "urgent_footer": "Expiring in less than 3 days",
-        "urgent_unit_one": "service",
-        "urgent_unit_many": "services",
-        "average_title": "Average Cost",
-        "average_footer": "Per single active service"
-    },
-    "analytics": {
-        "title": "Resource Allocation",
-        "no_data": "NO DATA",
-        "others": "OTHERS",
-        "notes_title": "Mindful System Notes",
-        "notes_db_title": "Live Database Integration:",
-        "notes_db_desc": "Connected to Postgres 17 database. Sync cycle is stable.",
-        "weight_label": "Current active pool weight:"
-    },
-    "registry": {
-        "title": "Your Calm Registry",
-        "subtitle": "Live records from subtrack server",
-        "btn_add": "+ Add New Entry",
-        "btn_cancel": "Cancel",
-        "btn_save": "Save to Database",
-        "btn_delete": "Delete",
-        "no_records": "No active records found in Postgres.",
-        "th_service": "Service",
-        "th_timeline": "Timeline",
-        "th_cycle": "Cycle",
-        "th_rate": "Rate",
-        "th_actions": "Actions",
-        "next_bill": "Next bill:",
-        "placeholder_name": "Service Name (e.g. Spotify)",
-        "placeholder_price": "Price (e.g. 9.99)",
-        "placeholder_category": "Category",
-        "form_error": "Please fill out all mandatory fields."
-    }
+  "welcome": "Welcome to your cozy subscription lounge",
+  "nav": {
+    "overview": "Overview",
+    "analytics": "Analytics",
+    "budget": "Budget"
+  },
+  "status": {
+    "loading": "Loading data...",
+    "active_title": "ACTIVE SUBSCRIPTIONS",
+    "active_unit": "subs",
+    "active_footer_1": "All subscriptions ",
+    "active_footer_2": "active",
+    "expenses_title": "MONTHLY EXPENSES",
+    "expenses_footer": "Calculated with current rates",
+    "urgent_title": "URGENT REVIEW",
+    "urgent_unit_one": "billing soon",
+    "urgent_unit_many": "billing soon",
+    "urgent_footer": "Next 3 days",
+    "average_title": "AVERAGE COST",
+    "average_footer": "Per subscription"
+  },
+  "auth": {
+    "welcome_back": "Welcome back",
+    "create_account": "Create account",
+    "subtitle_login": "Enter your details to log in",
+    "subtitle_register": "Register to start tracking",
+    "email_label": "Email",
+    "password_label": "Password",
+    "btn_login": "Sign In",
+    "btn_register": "Sign Up",
+    "btn_loading": "Loading...",
+    "btn_logout": "Log Out",
+    "has_account": "Already have an account?",
+    "no_account": "Don't have an account?",
+    "switch_login": "Sign In",
+    "switch_register": "Sign Up",
+    "error_409": "Email already in use",
+    "error_400": "Invalid email or password",
+    "error_default": "Authentication error"
+  },
+  "analytics": {
+    "title": "Expense Distribution",
+    "ghosts_title": "Ghost Subscriptions",
+    "others": "Others",
+    "no_data": "No data",
+    "notes_title": "Insights & Notes",
+    "notes_db_title": "Spending Analysis",
+    "notes_db_desc": "Review unused subscriptions to save money.",
+    "weight_label": "Total Spending"
+  },
+  "registry": {
+    "add_title": "Add Subscription",
+    "name_placeholder": "Name (e.g., Netflix)",
+    "price_placeholder": "Price",
+    "add_btn": "Add",
+    "list_title": "Your Subscriptions"
+  },
+  "debts": {
+    "title": "Who Owes Me",
+    "empty": "No active debts 👍"
+  }
 }
